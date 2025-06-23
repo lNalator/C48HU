@@ -55,10 +55,17 @@ const Header: React.FC = () => {
             <div className="flex items-center space-x-4">
               {user ? (
                 <div className="flex items-center space-x-3">
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                  <Link
+                    to={"/profile"}
+                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
+                      isActive("/profile")
+                        ? "text-blue-600 bg-blue-50"
+                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                    }`}
+                  >
                     <User className="h-4 w-4" />
                     <span>{user.username}</span>
-                  </div>
+                  </Link>
                   <button
                     onClick={logout}
                     className="flex items-center space-x-1 text-sm text-gray-600 hover:text-gray-900 transition-colors"

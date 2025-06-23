@@ -5,6 +5,7 @@ import Suggestions from "./pages/Suggestions";
 import { useEffect } from "react";
 import { useAppStore } from "./store/useAppStore";
 import { initializeAuth } from "./core/auth.utils";
+import Profile from "./pages/Profile";
 
 function App() {
   const setUser = useAppStore((state) => state.setUser); // à ajouter si pas encore
@@ -26,6 +27,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/suggestions" element={<Suggestions />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </main>
       </div>
