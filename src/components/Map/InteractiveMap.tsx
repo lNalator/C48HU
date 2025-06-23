@@ -1,25 +1,33 @@
-import React, { useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
-import { Icon, LatLng } from 'leaflet';
-import { Plus } from 'lucide-react';
-import { useAppStore } from '../../store/useAppStore';
-import { Suggestion } from '../../types';
-import SuggestionPopup from './SuggestionPopup';
-import AddSuggestionModal from './AddSuggestionModal';
+import React, { useState } from "react";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMapEvents,
+} from "react-leaflet";
+import { Icon, LatLng } from "leaflet";
+import { Plus } from "lucide-react";
+import { useAppStore } from "../../store/useAppStore";
+import { Suggestion } from "../../types";
+import SuggestionPopup from "./SuggestionPopup";
+import AddSuggestionModal from "./AddSuggestionModal";
 
 // Custom marker icons
 const createMarkerIcon = (type: string) => {
   const colors = {
-    transport: '#3B82F6',
-    amenagement: '#10B981',
-    environnement: '#F59E0B',
-    social: '#8B5CF6',
+    transport: "#3B82F6",
+    amenagement: "#10B981",
+    environnement: "#F59E0B",
+    social: "#8B5CF6",
   };
 
   return new Icon({
     iconUrl: `data:image/svg+xml;base64,${btoa(`
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="12" r="8" fill="${colors[type as keyof typeof colors]}" stroke="white" stroke-width="3"/>
+        <circle cx="12" cy="12" r="8" fill="${
+          colors[type as keyof typeof colors]
+        }" stroke="white" stroke-width="3"/>
       </svg>
     `)}`,
     iconSize: [24, 24],
@@ -28,7 +36,9 @@ const createMarkerIcon = (type: string) => {
   });
 };
 
-const MapEventHandler: React.FC<{ onMapClick: (latlng: LatLng) => void }> = ({ onMapClick }) => {
+const MapEventHandler: React.FC<{ onMapClick: (latlng: LatLng) => void }> = ({
+  onMapClick,
+}) => {
   useMapEvents({
     click: (e) => {
       onMapClick(e.latlng);
@@ -40,7 +50,8 @@ const MapEventHandler: React.FC<{ onMapClick: (latlng: LatLng) => void }> = ({ o
 const InteractiveMap: React.FC = () => {
   const { suggestions, user } = useAppStore();
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newSuggestionPosition, setNewSuggestionPosition] = useState<LatLng | null>(null);
+  const [newSuggestionPosition, setNewSuggestionPosition] =
+    useState<LatLng | null>(null);
 
   const handleMapClick = (latlng: LatLng) => {
     if (user?.isAuthenticated) {
@@ -56,19 +67,19 @@ const InteractiveMap: React.FC = () => {
 
   return (
     <>
-      <div className="relative h-full">
+      <div className="relative h-[45rem] z-0">
         <MapContainer
-          center={[48.8566, 2.3522]}
+          center={[44.833328, -0.56667]}
           zoom={15}
           className="h-full w-full rounded-lg"
         >
           <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          
+
           <MapEventHandler onMapClick={handleMapClick} />
-          
+
           {suggestions.map((suggestion) => (
             <Marker
               key={suggestion.id}
