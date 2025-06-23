@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { AppState, Suggestion, User } from "../types";
+import { AppState, Comments, Suggestion, User } from "../types";
 import { mockSuggestions } from "../data/mockData";
 import Api from "../core/api";
 import userService from "../core/services/user.service";
@@ -91,4 +91,44 @@ export const useAppStore = create<AppState>((set, get) => ({
     const { user } = get();
     return user?.id === userId ? user : null;
   },
+
+  addComment: (suggestionId: string, comment: Comments) => {
+    set((state) => {
+      const updatedSuggestions = state.suggestions.map((suggestion) =>
+        suggestion.id === suggestionId
+          ? { ...suggestion, comments: [...(suggestion.comments || []), comment] }
+          : suggestion
+      );
+      return { suggestions: updatedSuggestions };
+    });
+  },
+
+  voteComment: (suggestionId: string, commentId: string, voteType: 'up' | 'down') =>
+    set((state) => {
+      const userId = state.user?.id;
+      if (!userId) return state;
+      const suggestions = [...state.suggestions];
+      const suggestion = suggestions.find(s => s.id === suggestionId);
+      if (!suggestion || !suggestion.comments) return state;
+  
+      const comment = suggestion.comments.find(comment => comment.id === commentId);
+      if(!comment){
+        return state;
+      }
+
+      if (!comment.userVotes) comment.userVotes = {};
+      const previousVote = comment.userVotes[userId];
+      if (previousVote === voteType) return state;
+
+      if (previousVote) {
+        comment.votes[previousVote] -= 1;
+      }
+  
+      // Add new vote
+      comment.userVotes[userId] = voteType;
+      comment.votes[voteType] += 1;
+  
+      return { suggestions };
+    }),
+  
 }));
