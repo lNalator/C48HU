@@ -1,6 +1,8 @@
-import { create } from 'zustand';
-import { AppState, Suggestion, User } from '../types';
-import { mockSuggestions } from '../data/mockData';
+import { create } from "zustand";
+import { AppState, Suggestion, User } from "../types";
+import { mockSuggestions } from "../data/mockData";
+import Api from "../core/api";
+import userService from "../core/services/user.service";
 
 export const useAppStore = create<AppState>((set, get) => ({
   suggestions: mockSuggestions,
@@ -14,7 +16,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       createdAt: new Date().toISOString(),
       userVote: null,
     };
-    
+
     set((state) => ({
       suggestions: [...state.suggestions, suggestion],
     }));
@@ -22,7 +24,7 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   voteSuggestion: (id, voteType) => {
     const { user } = get();
-    if (!user?.isAuthenticated) return;
+    if (!user) return;
 
     set((state) => ({
       suggestions: state.suggestions.map((suggestion) => {
@@ -30,20 +32,20 @@ export const useAppStore = create<AppState>((set, get) => ({
 
         const currentVote = suggestion.userVote;
         let newVotes = { ...suggestion.votes };
-        let newUserVote: 'up' | 'down' | null = null;
+        let newUserVote: "up" | "down" | null = null;
 
         // Remove previous vote if exists
-        if (currentVote === 'up') newVotes.up--;
-        if (currentVote === 'down') newVotes.down--;
+        if (currentVote === "up") newVotes.up--;
+        if (currentVote === "down") newVotes.down--;
 
         // Add new vote if different from current
         if (currentVote !== voteType) {
-          if (voteType === 'up') {
+          if (voteType === "up") {
             newVotes.up++;
-            newUserVote = 'up';
+            newUserVote = "up";
           } else {
             newVotes.down++;
-            newUserVote = 'down';
+            newUserVote = "down";
           }
         }
 
@@ -56,16 +58,37 @@ export const useAppStore = create<AppState>((set, get) => ({
     }));
   },
 
-  login: (username) => {
-    const user: User = {
-      id: crypto.randomUUID(),
-      name: username,
-      isAuthenticated: true,
-    };
+  setUser: (user: User) => {
     set({ user });
   },
 
+  login: async (email, password) => {
+    try {
+      const user = await userService.login(email, password);
+      set({ user });
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  },
+
   logout: () => {
-    set({ user: null });
+    userService
+      .logout()
+      .then(() => {
+        set({ user: null });
+      })
+      .catch((error) => {
+        console.error("Logout failed:", error);
+      });
+  },
+
+  isAuthenticated: () => {
+    const { user } = get();
+    return user !== null && !user.is_anonymous;
+  },
+
+  getUserById: (userId: string) => {
+    const { user } = get();
+    return user?.id === userId ? user : null;
   },
 }));

@@ -35,7 +35,7 @@ const Home: React.FC = () => {
             </div>
           </div>
           
-          {!user?.isAuthenticated && (
+          {!user && (
             <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
               <p className="text-sm text-blue-700">
                 💡 Connectez-vous pour ajouter vos propres suggestions et voter pour celles qui vous intéressent.

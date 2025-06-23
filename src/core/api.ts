@@ -1,13 +1,29 @@
 export default class Api {
   private static readonly baseUrl = "http://localhost:8000/api";
+  private static token: string | null = null;
+
+  static setToken(token: string | null) {
+    this.token = token;
+  }
+
+  private static getHeaders(extraHeaders?: Record<string, string>): Record<string, string> {
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      ...extraHeaders,
+    };
+
+    if (this.token) {
+      headers["Authorization"] = `Bearer ${this.token}`;
+    }
+
+    return headers;
+  }
 
   static async get(url: string) {
     const fullUrl = this.baseUrl + url;
     const response = await fetch(fullUrl, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: this.getHeaders(),
     });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -15,16 +31,18 @@ export default class Api {
     return response.json();
   }
 
-  static async post(url: string, body: Record<string, any>) {
+  static async post(
+    url: string,
+    body: Record<string, any>,
+    options?: { headers?: Record<string, string> }
+  ) {
     const fullUrl = this.baseUrl + url;
     if (!body || typeof body !== "object") {
       throw new Error("Body must be a valid object");
     }
     const response = await fetch(fullUrl, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: this.getHeaders(options?.headers),
       body: JSON.stringify(body),
     });
     if (!response.ok) {
@@ -40,9 +58,7 @@ export default class Api {
     }
     const response = await fetch(fullUrl, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: this.getHeaders(),
       body: JSON.stringify(body),
     });
     if (!response.ok) {
@@ -56,9 +72,7 @@ export default class Api {
 
     const response = await fetch(fullUrl, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: this.getHeaders(),
     });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

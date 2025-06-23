@@ -1,13 +1,17 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { MapPin, List, User, LogOut } from 'lucide-react';
-import { useAppStore } from '../../store/useAppStore';
-import LoginModal from './LoginModal';
+import React, { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { MapPin, List, User, LogOut } from "lucide-react";
+import { useAppStore } from "../../store/useAppStore";
+import LoginModal from "./LoginModal";
 
 const Header: React.FC = () => {
   const location = useLocation();
   const { user, logout } = useAppStore();
   const [showLoginModal, setShowLoginModal] = React.useState(false);
+
+  useEffect(() => {
+    
+  })
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -19,16 +23,18 @@ const Header: React.FC = () => {
             <div className="flex items-center space-x-8">
               <Link to="/" className="flex items-center space-x-2">
                 <MapPin className="h-8 w-8 text-blue-600" />
-                <span className="text-xl font-bold text-gray-900">UrbanVoice</span>
+                <span className="text-xl font-bold text-gray-900">
+                  UrbanVoice
+                </span>
               </Link>
-              
+
               <nav className="hidden md:flex space-x-6">
                 <Link
                   to="/"
                   className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
-                    isActive('/') 
-                      ? 'text-blue-600 bg-blue-50' 
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                    isActive("/")
+                      ? "text-blue-600 bg-blue-50"
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                   }`}
                 >
                   <MapPin className="h-4 w-4" />
@@ -37,9 +43,9 @@ const Header: React.FC = () => {
                 <Link
                   to="/suggestions"
                   className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
-                    isActive('/suggestions') 
-                      ? 'text-blue-600 bg-blue-50' 
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                    isActive("/suggestions")
+                      ? "text-blue-600 bg-blue-50"
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                   }`}
                 >
                   <List className="h-4 w-4" />
@@ -49,11 +55,11 @@ const Header: React.FC = () => {
             </div>
 
             <div className="flex items-center space-x-4">
-              {user?.isAuthenticated ? (
+              {user ? (
                 <div className="flex items-center space-x-3">
                   <div className="flex items-center space-x-2 text-sm text-gray-600">
                     <User className="h-4 w-4" />
-                    <span>{user.name}</span>
+                    <span>{user.username}</span>
                   </div>
                   <button
                     onClick={logout}
@@ -76,9 +82,9 @@ const Header: React.FC = () => {
         </div>
       </header>
 
-      <LoginModal 
-        isOpen={showLoginModal} 
-        onClose={() => setShowLoginModal(false)} 
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
       />
     </>
   );

@@ -54,7 +54,7 @@ const InteractiveMap: React.FC = () => {
     useState<LatLng | null>(null);
 
   const handleMapClick = (latlng: LatLng) => {
-    if (user?.isAuthenticated) {
+    if (user) {
       setNewSuggestionPosition(latlng);
       setShowAddModal(true);
     }
@@ -93,7 +93,7 @@ const InteractiveMap: React.FC = () => {
           ))}
         </MapContainer>
 
-        {user?.isAuthenticated && (
+        {user && (
           <div className="absolute bottom-4 right-4 z-10">
             <div className="bg-white rounded-lg shadow-lg p-3 text-sm text-gray-600 mb-2 max-w-48">
               Cliquez sur la carte pour ajouter une suggestion
