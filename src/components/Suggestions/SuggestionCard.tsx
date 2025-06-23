@@ -7,9 +7,10 @@ import { Calendar, MapPin, ThumbsDown, ThumbsUp, User } from "lucide-react";
 
 interface SuggestionCardProps {
   suggestion: Suggestion;
+  className?: string;
 }
 
-const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion }) => {
+const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion, className }) => {
   const { user, voteSuggestion } = useAppStore();
   const [showComments, setShowComments] = useState(false);
 
@@ -44,9 +45,15 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion }) => {
         {suggestion.type.map((type, key) => (
           <span
             key={key}
-            className={`inline-block px-3 py-1 text-sm font-medium rounded-full border ${typeColors[type]}`}
+            className={`inline-block px-3 py-1 text-sm font-medium rounded-full border ${
+              typeColors[type as keyof typeof typeColors]
+            }`}
           >
-            {SuggestionTypeLabelsConstant[type]}
+            {
+              SuggestionTypeLabelsConstant[
+                type as keyof typeof SuggestionTypeLabelsConstant
+              ]
+            }
           </span>
         ))}
         <div className="text-right text-sm text-gray-500">

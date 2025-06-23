@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { AppState, Comments, Suggestion, User } from "../types";
 import { mockSuggestions } from "../data/mockData";
-import Api from "../core/api";
 import AuthService from "../core/services/auth.service";
 import userService from "../core/services/user.service";
 import { SuggestionService } from "../core/services/suggestion.service";
@@ -17,27 +16,25 @@ export const useAppStore = create<AppState>((set, get) => ({
       const result = await SuggestionService.getAllSuggestion();
       const ideas: Idea[] = result.results;
       console.log(ideas);
-      const suggestions: Suggestion[] = ideas.map(
-        (idea) => ({
-          id: idea.id.toString(),
-          title: idea.title,
-          description: '', //ajouter la description à idea
-          type: [idea.category],
-          position: {
-            lat: Number(idea.latitude),
-            lng: Number(idea.longitude),
-          },
-          votes: {
-            up: idea.positive_votes,
-            down: idea.negative_votes,
-          },
-          author: idea.author_email,
-          createdAt: idea.created_at,
-          userVote: null,
-          comments: [],
-          status: idea.status,
-        }) 
-      );
+      const suggestions: Suggestion[] = ideas.map((idea) => ({
+        id: idea.id.toString(),
+        title: idea.title,
+        description: "", //ajouter la description à idea
+        type: [idea.category],
+        position: {
+          lat: Number(idea.latitude),
+          lng: Number(idea.longitude),
+        },
+        votes: {
+          up: idea.positive_votes,
+          down: idea.negative_votes,
+        },
+        author: idea.author_email,
+        createdAt: idea.created_at,
+        userVote: null,
+        comments: [],
+        status: idea.status,
+      }));
       suggestions.push(...mockSuggestions);
       set({ suggestions });
     } catch (error) {
@@ -64,12 +61,34 @@ export const useAppStore = create<AppState>((set, get) => ({
     if (!user) return;
 
     try {
-      const userSuggestions = await userService.getUserSuggestions(user.id);
+      const userSuggestions = await userService
+        .getUserSuggestions(user.id)
+        .then((response) => {
+          return response.results.map((idea: Idea) => ({
+            id: idea.id.toString(),
+            title: idea.title,
+            description: "", //ajouter la description à idea
+            type: [idea.category],
+            position: {
+              lat: Number(idea.latitude),
+              lng: Number(idea.longitude),
+            },
+            votes: {
+              up: idea.positive_votes,
+              down: idea.negative_votes,
+            },
+            author: idea.author_email,
+            createdAt: idea.created_at,
+            userVote: null,
+            comments: [],
+            status: idea.status,
+          }));
+        });
       if (!userSuggestions) {
         console.warn("No suggestions found for user:", user.id);
         return;
       }
-      set({ userSuggestions: userSuggestions.results });
+      set({ userSuggestions: userSuggestions });
     } catch (error) {
       console.warn("Error fetching suggestions by author:", error);
     }

@@ -16,18 +16,29 @@ const Profile: React.FC = () => {
     <div className="flex flex-col justify-center h-full p-6">
       <h1 className="text-2xl font-bold mb-4 self-center">Mon Profil</h1>
       {user ? (
-        <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-md">
-          <h2 className="text-xl font-semibold mb-2">{user.username}</h2>
+        <div className="bg-white shadow-md rounded-lg p-6 w-full">
+          <h2 className="text-xl font-semibold mb-10">{user.username}</h2>
+
+          <p className="text-gray-600 mb-4">Email: {user.email}</p>
+          <p className="text-gray-600 mb-4">
+            Nombre de suggestions: {userSuggestions.length}
+          </p>
+
+          <p className="text-gray-600 mb-4">
+            Date d'inscription:{" "}
+            {new Date(user.created_at).toLocaleDateString("fr-FR", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            })}
+          </p>
+
           {userSuggestions.length > 0 ? (
-            <div className="mb-4">
+            <div className="mb-4 mt-10 flex flex-col">
               <h3 className="text-lg font-medium mb-2">Mes Suggestions</h3>
-              <ul className="list-disc pl-5 space-y-2">
+              <ul className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
                 {userSuggestions.map((suggestion: any) => (
-                  //   <SuggestionCard key={suggestion.id} suggestion={suggestion} />
-                  <div>
-                    <div>{suggestion.title}</div>
-                    <div>{suggestion.category}</div>
-                  </div>
+                  <SuggestionCard key={suggestion.id} suggestion={suggestion} />
                 ))}
               </ul>
             </div>

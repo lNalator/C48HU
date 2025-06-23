@@ -34,11 +34,10 @@ const SuggestionPopup: React.FC<SuggestionPopupProps> = ({ suggestion }) => {
 
   return (
     <div className="p-2 max-w-xs">
-      {suggestion.type.map(
-        (type) => 
-          <div className="mb-2">
-            <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${typeColors[type]}`}>
-              {SuggestionTypeLabelsConstant[type]}
+      {suggestion.type.map((type) => 
+          <div className="mb-2" key={type}>
+            <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${(typeColors as Record<string, string>)[type]}`}>
+              {SuggestionTypeLabelsConstant[type as keyof typeof SuggestionTypeLabelsConstant]}
             </span>
           </div>
         )}
