@@ -12,6 +12,17 @@ export const mockSuggestions: Suggestion[] = [
     author: 'Marie Dubois',
     createdAt: '2024-01-15T10:30:00Z',
     userVote: null,
+    comments: [
+      {
+        id: '1',
+        userName: 'Enzo',
+        votes: {
+          up: 10,
+          down: 254,
+        },
+        comments: 'Pas ouf, je suis un gros nullos',
+      }
+    ]
   },
   {
     id: '2',
