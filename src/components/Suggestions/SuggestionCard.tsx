@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ThumbsUp, ThumbsDown, User, Calendar, MapPin } from 'lucide-react';
 import { Suggestion } from '../../types';
 import { useAppStore } from '../../store/useAppStore';
 import { SuggestionTypeLabelsConstant } from '../../constants/suggestion-type-labels.constant';
+import CommentModal from './CommentModal';
 
 interface SuggestionCardProps {
   suggestion: Suggestion;
@@ -10,6 +11,8 @@ interface SuggestionCardProps {
 
 const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion }) => {
   const { user, voteSuggestion } = useAppStore();
+  const [showComments, setShowComments] = useState(false);
+
 
   const typeColors = {
     transport: 'bg-blue-100 text-blue-800 border-blue-200',
@@ -113,6 +116,21 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion }) => {
           <span className="text-sm text-gray-400">Connectez-vous pour voter</span>
         )}
       </div>
+
+      <button
+        onClick={() => setShowComments(true)}
+        className="text-blue-600 hover:underline text-sm"
+      >
+        Commentaires ({suggestion.comments?.length || 0})
+      </button>
+
+      {showComments && (
+        <CommentModal
+          title={suggestion.title}
+          suggestionId={suggestion.id}
+          onClose={() => setShowComments(false)}
+        />
+      )}
     </div>
   );
 };

@@ -16,6 +16,7 @@ export interface Suggestion {
   author: string;
   createdAt: string;
   userVote?: 'up' | 'down' | null;
+  comments?: Comments[];
 }
 
 export interface User {
@@ -31,4 +32,19 @@ export interface AppState {
   voteSuggestion: (id: string, voteType: 'up' | 'down') => void;
   login: (username: string) => void;
   logout: () => void;
+  addComment: (suggestionId: string, comment: Comments) => void;
+  voteComment: (suggestionId: string, commentId: string, voteType: 'up' | 'down') => void;
+}
+
+export interface Comments {
+  id: string;
+  userName: string;
+  votes: {
+    up: number;
+    down: number;
+  };
+  comments: string;
+  userVotes?: {
+    [userId: string]: 'up' | 'down';
+  };
 }
