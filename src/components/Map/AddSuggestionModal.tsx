@@ -4,6 +4,7 @@ import { LatLng } from "leaflet";
 import { useAppStore } from "../../store/useAppStore";
 import { SuggestionTypeEnum } from "../../types/suggestion-type.enum";
 import Select from "react-select";
+import { SuggestionStatusEnum } from "../../types/suggestion-status.enum";
 
 interface AddSuggestionModalProps {
   isOpen: boolean;
@@ -33,6 +34,7 @@ const AddSuggestionModal: React.FC<AddSuggestionModalProps> = ({
           lng: position.lng,
         },
         author: user.username,
+        status: SuggestionStatusEnum.PROPOSED
       });
 
       // Reset form
