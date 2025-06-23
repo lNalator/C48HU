@@ -23,8 +23,10 @@ export interface Suggestion {
 
 export interface User {
   id: string;
-  name: string;
-  isAuthenticated: boolean;
+  created_at: string;
+  email: string;
+  username: string;
+  is_anonymous: boolean;
 }
 
 export interface AppState {
@@ -32,7 +34,8 @@ export interface AppState {
   user: User | null;
   addSuggestion: (suggestion: Omit<Suggestion, 'id' | 'votes' | 'createdAt'>) => void;
   voteSuggestion: (id: string, voteType: 'up' | 'down') => void;
-  login: (username: string) => void;
+  setUser: (user: User) => void;
+  login: (email: string, password:string) => void;
   logout: () => void;
   addComment: (suggestionId: string, comment: Comments) => void;
   voteComment: (suggestionId: string, commentId: string, voteType: 'up' | 'down') => void;
@@ -49,4 +52,9 @@ export interface Comments {
   userVotes?: {
     [userId: string]: 'up' | 'down';
   };
+}
+
+export type Tokens = {
+  access: string;
+  refreshToken: string;
 }
