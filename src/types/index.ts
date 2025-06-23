@@ -1,0 +1,32 @@
+export interface Suggestion {
+  id: string;
+  title: string;
+  description: string;
+  type: 'transport' | 'amenagement' | 'environnement' | 'social';
+  position: {
+    lat: number;
+    lng: number;
+  };
+  votes: {
+    up: number;
+    down: number;
+  };
+  author: string;
+  createdAt: string;
+  userVote?: 'up' | 'down' | null;
+}
+
+export interface User {
+  id: string;
+  name: string;
+  isAuthenticated: boolean;
+}
+
+export interface AppState {
+  suggestions: Suggestion[];
+  user: User | null;
+  addSuggestion: (suggestion: Omit<Suggestion, 'id' | 'votes' | 'createdAt'>) => void;
+  voteSuggestion: (id: string, voteType: 'up' | 'down') => void;
+  login: (username: string) => void;
+  logout: () => void;
+}
