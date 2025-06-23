@@ -16,7 +16,7 @@ export interface Suggestion {
   };
   author: string;
   createdAt: string;
-  userVote?: 'up' | 'down' | null;
+  userVote?: "up" | "down" | null;
   comments?: Comments[];
   status: SuggestionStatusEnum;
 }
@@ -31,14 +31,22 @@ export interface User {
 
 export interface AppState {
   suggestions: Suggestion[];
+  userSuggestions: Suggestion[];
   user: User | null;
-  addSuggestion: (suggestion: Omit<Suggestion, 'id' | 'votes' | 'createdAt'>) => void;
-  voteSuggestion: (id: string, voteType: 'up' | 'down') => void;
+  addSuggestion: (
+    suggestion: Omit<Suggestion, "id" | "votes" | "createdAt">
+  ) => void;
+  getUserSuggestions: () => void;
+  voteSuggestion: (id: string, voteType: "up" | "down") => void;
   setUser: (user: User) => void;
-  login: (email: string, password:string) => void;
+  login: (email: string, password: string) => void;
   logout: () => void;
   addComment: (suggestionId: string, comment: Comments) => void;
-  voteComment: (suggestionId: string, commentId: string, voteType: 'up' | 'down') => void;
+  voteComment: (
+    suggestionId: string,
+    commentId: string,
+    voteType: "up" | "down"
+  ) => void;
 }
 
 export interface Comments {
@@ -50,11 +58,11 @@ export interface Comments {
   };
   comments: string;
   userVotes?: {
-    [userId: string]: 'up' | 'down';
+    [userId: string]: "up" | "down";
   };
 }
 
 export type Tokens = {
   access: string;
-  refreshToken: string;
-}
+  refresh: string;
+};

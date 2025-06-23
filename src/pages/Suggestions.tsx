@@ -13,7 +13,7 @@ const Suggestions: React.FC = () => {
     
     // Filter by type
     if (filterType !== 'all') {
-      filtered = suggestions.filter(s => s.type === filterType);
+      filtered = suggestions.filter(s => (s.type as any) === filterType);
     }
     
     // Sort
@@ -26,7 +26,7 @@ const Suggestions: React.FC = () => {
         case 'date':
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
         case 'type':
-          return a.type.localeCompare(b.type);
+          return String(a.type).localeCompare(String(b.type));
         default:
           return 0;
       }

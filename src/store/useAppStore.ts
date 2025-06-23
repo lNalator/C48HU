@@ -2,10 +2,12 @@ import { create } from "zustand";
 import { AppState, Comments, Suggestion, User } from "../types";
 import { mockSuggestions } from "../data/mockData";
 import Api from "../core/api";
+import AuthService from "../core/services/auth.service";
 import userService from "../core/services/user.service";
 
 export const useAppStore = create<AppState>((set, get) => ({
   suggestions: mockSuggestions,
+  userSuggestions: [],
   user: null,
 
   addSuggestion: (newSuggestion) => {
@@ -20,6 +22,22 @@ export const useAppStore = create<AppState>((set, get) => ({
     set((state) => ({
       suggestions: [...state.suggestions, suggestion],
     }));
+  },
+
+  getUserSuggestions: async () => {
+    const { user } = get();
+    if (!user) return;
+
+    try {
+      const userSuggestions = await userService.getUserSuggestions(user.id);
+      if (!userSuggestions) {
+        console.warn("No suggestions found for user:", user.id);
+        return;
+      }
+      set({ userSuggestions: userSuggestions.results });
+    } catch (error) {
+      console.warn("Error fetching suggestions by author:", error);
+    }
   },
 
   voteSuggestion: (id, voteType) => {
@@ -64,7 +82,7 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   login: async (email, password) => {
     try {
-      const user = await userService.login(email, password);
+      const user = await AuthService.login(email, password);
       set({ user });
     } catch (error) {
       console.error("Login failed:", error);
@@ -72,12 +90,11 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   logout: () => {
-    userService
-      .logout()
+    AuthService.logout()
       .then(() => {
         set({ user: null });
       })
-      .catch((error) => {
+      .catch((error: any) => {
         console.error("Logout failed:", error);
       });
   },
@@ -96,23 +113,32 @@ export const useAppStore = create<AppState>((set, get) => ({
     set((state) => {
       const updatedSuggestions = state.suggestions.map((suggestion) =>
         suggestion.id === suggestionId
-          ? { ...suggestion, comments: [...(suggestion.comments || []), comment] }
+          ? {
+              ...suggestion,
+              comments: [...(suggestion.comments || []), comment],
+            }
           : suggestion
       );
       return { suggestions: updatedSuggestions };
     });
   },
 
-  voteComment: (suggestionId: string, commentId: string, voteType: 'up' | 'down') =>
+  voteComment: (
+    suggestionId: string,
+    commentId: string,
+    voteType: "up" | "down"
+  ) =>
     set((state) => {
       const userId = state.user?.id;
       if (!userId) return state;
       const suggestions = [...state.suggestions];
-      const suggestion = suggestions.find(s => s.id === suggestionId);
+      const suggestion = suggestions.find((s) => s.id === suggestionId);
       if (!suggestion || !suggestion.comments) return state;
-  
-      const comment = suggestion.comments.find(comment => comment.id === commentId);
-      if(!comment){
+
+      const comment = suggestion.comments.find(
+        (comment) => comment.id === commentId
+      );
+      if (!comment) {
         return state;
       }
 
@@ -123,12 +149,11 @@ export const useAppStore = create<AppState>((set, get) => ({
       if (previousVote) {
         comment.votes[previousVote] -= 1;
       }
-  
+
       // Add new vote
       comment.userVotes[userId] = voteType;
       comment.votes[voteType] += 1;
-  
+
       return { suggestions };
     }),
-  
 }));
