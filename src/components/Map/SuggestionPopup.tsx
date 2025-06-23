@@ -19,7 +19,7 @@ const SuggestionPopup: React.FC<SuggestionPopupProps> = ({ suggestion }) => {
   };
 
   const handleVote = (voteType: 'up' | 'down') => {
-    if (user?.isAuthenticated) {
+    if (user) {
       voteSuggestion(suggestion.id, voteType);
     }
   };
@@ -61,12 +61,12 @@ const SuggestionPopup: React.FC<SuggestionPopupProps> = ({ suggestion }) => {
         <div className="flex items-center space-x-4">
           <button
             onClick={() => handleVote('up')}
-            disabled={!user?.isAuthenticated}
+            disabled={!user}
             className={`flex items-center space-x-1 px-2 py-1 rounded transition-colors ${
               suggestion.userVote === 'up'
                 ? 'bg-green-100 text-green-700'
                 : 'text-gray-600 hover:bg-gray-100'
-            } ${!user?.isAuthenticated ? 'cursor-not-allowed opacity-50' : ''}`}
+            } ${!user ? 'cursor-not-allowed opacity-50' : ''}`}
           >
             <ThumbsUp className="h-3 w-3" />
             <span className="text-xs font-medium">{suggestion.votes.up}</span>
@@ -74,19 +74,19 @@ const SuggestionPopup: React.FC<SuggestionPopupProps> = ({ suggestion }) => {
           
           <button
             onClick={() => handleVote('down')}
-            disabled={!user?.isAuthenticated}
+            disabled={!user}
             className={`flex items-center space-x-1 px-2 py-1 rounded transition-colors ${
               suggestion.userVote === 'down'
                 ? 'bg-red-100 text-red-700'
                 : 'text-gray-600 hover:bg-gray-100'
-            } ${!user?.isAuthenticated ? 'cursor-not-allowed opacity-50' : ''}`}
+            } ${!user ? 'cursor-not-allowed opacity-50' : ''}`}
           >
             <ThumbsDown className="h-3 w-3" />
             <span className="text-xs font-medium">{suggestion.votes.down}</span>
           </button>
         </div>
         
-        {!user?.isAuthenticated && (
+        {!user && (
           <span className="text-xs text-gray-400">Connectez-vous pour voter</span>
         )}
       </div>

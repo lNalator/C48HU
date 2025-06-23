@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { X } from 'lucide-react';
-import { LatLng } from 'leaflet';
-import { useAppStore } from '../../store/useAppStore';
-import { SuggestionTypeEnum } from '../../types/suggestion-type.enum';
+import React, { useState } from "react";
+import { X } from "lucide-react";
+import { LatLng } from "leaflet";
+import { useAppStore } from "../../store/useAppStore";
+import { SuggestionTypeEnum } from "../../types/suggestion-type.enum";
 import Select from "react-select";
 
 interface AddSuggestionModalProps {
@@ -11,9 +11,13 @@ interface AddSuggestionModalProps {
   position: LatLng | null;
 }
 
-const AddSuggestionModal: React.FC<AddSuggestionModalProps> = ({ isOpen, onClose, position }) => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+const AddSuggestionModal: React.FC<AddSuggestionModalProps> = ({
+  isOpen,
+  onClose,
+  position,
+}) => {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [type, setType] = useState<SuggestionTypeEnum[]>([]);
   const { addSuggestion, user } = useAppStore();
 
@@ -28,12 +32,12 @@ const AddSuggestionModal: React.FC<AddSuggestionModalProps> = ({ isOpen, onClose
           lat: position.lat,
           lng: position.lng,
         },
-        author: user.name,
+        author: user.username,
       });
-      
+
       // Reset form
-      setTitle('');
-      setDescription('');
+      setTitle("");
+      setDescription("");
       setType([]);
       onClose();
     }
@@ -42,17 +46,19 @@ const AddSuggestionModal: React.FC<AddSuggestionModalProps> = ({ isOpen, onClose
   if (!isOpen) return null;
 
   const typeOptions = [
-    { value: 'transport', label: 'Transport' },
-    { value: 'amenagement', label: 'Aménagement' },
-    { value: 'environnement', label: 'Environnement' },
-    { value: 'social', label: 'Social' },
+    { value: "transport", label: "Transport" },
+    { value: "amenagement", label: "Aménagement" },
+    { value: "environnement", label: "Environnement" },
+    { value: "social", label: "Social" },
   ];
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl p-6 w-full max-w-md mx-4">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold text-gray-900">Nouvelle suggestion</h2>
+          <h2 className="text-xl font-semibold text-gray-900">
+            Nouvelle suggestion
+          </h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -60,10 +66,13 @@ const AddSuggestionModal: React.FC<AddSuggestionModalProps> = ({ isOpen, onClose
             <X className="h-5 w-5" />
           </button>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="title"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Titre
             </label>
             <input
@@ -76,9 +85,12 @@ const AddSuggestionModal: React.FC<AddSuggestionModalProps> = ({ isOpen, onClose
               required
             />
           </div>
-          
+
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Description
             </label>
             <textarea
@@ -91,17 +103,24 @@ const AddSuggestionModal: React.FC<AddSuggestionModalProps> = ({ isOpen, onClose
               required
             />
           </div>
-          
+
           <div>
-            <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="type"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Catégories
             </label>
             <Select
               isMulti
               options={typeOptions}
-              value={typeOptions.filter((opt) => type.includes(opt.value as SuggestionTypeEnum))}
+              value={typeOptions.filter((opt) =>
+                type.includes(opt.value as SuggestionTypeEnum)
+              )}
               onChange={(selectedOptions) => {
-                const selectedValues = (selectedOptions || []).map((opt) => opt.value);
+                const selectedValues = (selectedOptions || []).map(
+                  (opt) => opt.value
+                );
                 setType(selectedValues as SuggestionTypeEnum[]);
               }}
               className="react-select-container"
@@ -109,15 +128,17 @@ const AddSuggestionModal: React.FC<AddSuggestionModalProps> = ({ isOpen, onClose
               placeholder="Sélectionnez une ou plusieurs catégories..."
             />
           </div>
-          
+
           {position && (
             <div className="text-sm text-gray-500 bg-gray-50 p-3 rounded-lg">
-              <p><strong>Position:</strong></p>
+              <p>
+                <strong>Position:</strong>
+              </p>
               <p>Latitude: {position.lat.toFixed(6)}</p>
               <p>Longitude: {position.lng.toFixed(6)}</p>
             </div>
           )}
-          
+
           <div className="flex space-x-3">
             <button
               type="button"
@@ -126,10 +147,7 @@ const AddSuggestionModal: React.FC<AddSuggestionModalProps> = ({ isOpen, onClose
             >
               Annuler
             </button>
-            <button
-              type="submit"
-              className="btn-primary flex-1"
-            >
+            <button type="submit" className="btn-primary flex-1">
               Ajouter
             </button>
           </div>

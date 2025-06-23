@@ -19,19 +19,19 @@ const Home: React.FC = () => {
           <div className="flex flex-wrap items-center gap-4 text-sm">
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-              <span>Transport ({suggestions.filter(s => s.type === 'transport').length})</span>
+              <span>Transport ({suggestions.filter(s => (s.type as any) === 'transport').length})</span>
             </div>
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-              <span>Aménagement ({suggestions.filter(s => s.type === 'amenagement').length})</span>
+              <span>Aménagement ({suggestions.filter(s => (s.type as any) === 'amenagement').length})</span>
             </div>
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-              <span>Environnement ({suggestions.filter(s => s.type === 'environnement').length})</span>
+              <span>Environnement ({suggestions.filter(s => (s.type as any) === 'environnement').length})</span>
             </div>
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-              <span>Social ({suggestions.filter(s => s.type === 'social').length})</span>
+              <span>Social ({suggestions.filter(s => (s.type as any) === 'social').length})</span>
             </div>
           </div>
           
