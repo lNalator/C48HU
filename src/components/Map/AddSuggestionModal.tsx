@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { LatLng } from 'leaflet';
 import { useAppStore } from '../../store/useAppStore';
+import { SuggestionTypeEnum } from '../../types/suggestion-type.enum';
+import Select from "react-select";
 
 interface AddSuggestionModalProps {
   isOpen: boolean;
@@ -12,7 +14,7 @@ interface AddSuggestionModalProps {
 const AddSuggestionModal: React.FC<AddSuggestionModalProps> = ({ isOpen, onClose, position }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [type, setType] = useState<'transport' | 'amenagement' | 'environnement' | 'social'>('amenagement');
+  const [type, setType] = useState<SuggestionTypeEnum[]>([]);
   const { addSuggestion, user } = useAppStore();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -32,7 +34,7 @@ const AddSuggestionModal: React.FC<AddSuggestionModalProps> = ({ isOpen, onClose
       // Reset form
       setTitle('');
       setDescription('');
-      setType('amenagement');
+      setType([]);
       onClose();
     }
   };
@@ -92,20 +94,20 @@ const AddSuggestionModal: React.FC<AddSuggestionModalProps> = ({ isOpen, onClose
           
           <div>
             <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-1">
-              Catégorie
+              Catégories
             </label>
-            <select
-              id="type"
-              value={type}
-              onChange={(e) => setType(e.target.value as typeof type)}
-              className="input-field"
-            >
-              {typeOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            <Select
+              isMulti
+              options={typeOptions}
+              value={typeOptions.filter((opt) => type.includes(opt.value as SuggestionTypeEnum))}
+              onChange={(selectedOptions) => {
+                const selectedValues = (selectedOptions || []).map((opt) => opt.value);
+                setType(selectedValues as SuggestionTypeEnum[]);
+              }}
+              className="react-select-container"
+              classNamePrefix="react-select"
+              placeholder="Sélectionnez une ou plusieurs catégories..."
+            />
           </div>
           
           {position && (

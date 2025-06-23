@@ -1,8 +1,10 @@
+import { SuggestionTypeEnum } from "./suggestion-type.enum";
+
 export interface Suggestion {
   id: string;
   title: string;
   description: string;
-  type: 'transport' | 'amenagement' | 'environnement' | 'social';
+  type: SuggestionTypeEnum[];
   position: {
     lat: number;
     lng: number;

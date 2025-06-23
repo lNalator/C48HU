@@ -2,6 +2,7 @@ import React from 'react';
 import { ThumbsUp, ThumbsDown, User, Calendar } from 'lucide-react';
 import { Suggestion } from '../../types';
 import { useAppStore } from '../../store/useAppStore';
+import { SuggestionTypeLabelsConstant } from '../../constants/suggestion-type-labels.constant';
 
 interface SuggestionPopupProps {
   suggestion: Suggestion;
@@ -9,13 +10,6 @@ interface SuggestionPopupProps {
 
 const SuggestionPopup: React.FC<SuggestionPopupProps> = ({ suggestion }) => {
   const { user, voteSuggestion } = useAppStore();
-
-  const typeLabels = {
-    transport: 'Transport',
-    amenagement: 'Aménagement',
-    environnement: 'Environnement',
-    social: 'Social',
-  };
 
   const typeColors = {
     transport: 'bg-blue-100 text-blue-800',
@@ -40,11 +34,14 @@ const SuggestionPopup: React.FC<SuggestionPopupProps> = ({ suggestion }) => {
 
   return (
     <div className="p-2 max-w-xs">
-      <div className="mb-2">
-        <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${typeColors[suggestion.type]}`}>
-          {typeLabels[suggestion.type]}
-        </span>
-      </div>
+      {suggestion.type.map(
+        (type) => 
+          <div className="mb-2">
+            <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${typeColors[type]}`}>
+              {SuggestionTypeLabelsConstant[type]}
+            </span>
+          </div>
+        )}
       
       <h3 className="font-semibold text-gray-900 mb-2">{suggestion.title}</h3>
       <p className="text-sm text-gray-600 mb-3">{suggestion.description}</p>
