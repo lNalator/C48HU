@@ -3,19 +3,20 @@ import Header from "./components/Layout/Header";
 import Home from "./pages/Home";
 import Suggestions from "./pages/Suggestions";
 import { useEffect } from "react";
-import Api from "./core/api";
 import { useAppStore } from "./store/useAppStore";
 import { initializeAuth } from "./core/auth.utils";
 
 function App() {
   const setUser = useAppStore((state) => state.setUser); // à ajouter si pas encore
+  const fetchSuggestions = useAppStore((state) => state.fetchSuggestions);
 
   useEffect(() => {
     const user = initializeAuth();
     if (user) {
       setUser(user);
     }
-  }, []);
+    fetchSuggestions();
+  }, [setUser, fetchSuggestions]);
 
   return (
     <Router>

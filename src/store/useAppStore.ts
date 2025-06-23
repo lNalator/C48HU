@@ -1,12 +1,46 @@
 import { create } from "zustand";
 import { AppState, Comments, Suggestion, User } from "../types";
-import { mockSuggestions } from "../data/mockData";
-import Api from "../core/api";
 import userService from "../core/services/user.service";
+import { SuggestionService } from "../core/services/suggestion.service";
+import { Idea } from "../core/models/idea";
+import { mockSuggestions } from "../data/mockData";
 
 export const useAppStore = create<AppState>((set, get) => ({
-  suggestions: mockSuggestions,
+  suggestions: [],
   user: null,
+
+  fetchSuggestions: async () => {
+    try {
+      const result = await SuggestionService.getAllSuggestion();
+      const ideas: Idea[] = result.results;
+      console.log(ideas);
+      const suggestions: Suggestion[] = ideas.map(
+        (idea) => ({
+          id: idea.id.toString(),
+          title: idea.title,
+          description: '', //ajouter la description à idea
+          type: [idea.category],
+          position: {
+            lat: Number(idea.latitude),
+            lng: Number(idea.longitude),
+          },
+          votes: {
+            up: idea.positive_votes,
+            down: idea.negative_votes,
+          },
+          author: idea.author_email,
+          createdAt: idea.created_at,
+          userVote: null,
+          comments: [],
+          status: idea.status,
+        }) 
+      );
+      suggestions.push(...mockSuggestions);
+      set({ suggestions });
+    } catch (error) {
+      console.error("Failed to fetch suggestions:", error);
+    }
+  },
 
   addSuggestion: (newSuggestion) => {
     const suggestion: Suggestion = {

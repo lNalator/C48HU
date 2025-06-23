@@ -5,7 +5,7 @@ export interface Suggestion {
   id: string;
   title: string;
   description: string;
-  type: SuggestionTypeEnum[];
+  type: SuggestionTypeEnum[] | string[];
   position: {
     lat: number;
     lng: number;
@@ -18,7 +18,7 @@ export interface Suggestion {
   createdAt: string;
   userVote?: 'up' | 'down' | null;
   comments?: Comments[];
-  status: SuggestionStatusEnum;
+  status?: SuggestionStatusEnum | string;
 }
 
 export interface User {
@@ -39,6 +39,7 @@ export interface AppState {
   logout: () => void;
   addComment: (suggestionId: string, comment: Comments) => void;
   voteComment: (suggestionId: string, commentId: string, voteType: 'up' | 'down') => void;
+  fetchSuggestions: () => Promise<void>;
 }
 
 export interface Comments {
