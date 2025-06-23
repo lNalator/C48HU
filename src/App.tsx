@@ -1,10 +1,22 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Header from './components/Layout/Header';
-import Home from './pages/Home';
-import Suggestions from './pages/Suggestions';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Header from "./components/Layout/Header";
+import Home from "./pages/Home";
+import Suggestions from "./pages/Suggestions";
+import { useEffect } from "react";
+import Api from "./core/api";
+import { useAppStore } from "./store/useAppStore";
+import { initializeAuth } from "./core/auth.utils";
 
 function App() {
+  const setUser = useAppStore((state) => state.setUser); // à ajouter si pas encore
+
+  useEffect(() => {
+    const user = initializeAuth();
+    if (user) {
+      setUser(user);
+    }
+  }, []);
+
   return (
     <Router>
       <div className="min-h-screen bg-gray-50 flex flex-col">
