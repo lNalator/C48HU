@@ -9,9 +9,7 @@ const Header: React.FC = () => {
   const { user, logout } = useAppStore();
   const [showLoginModal, setShowLoginModal] = React.useState(false);
 
-  useEffect(() => {
-    
-  })
+  useEffect(() => {});
 
   const isActive = (path: string) => location.pathname === path;
 

@@ -24,7 +24,7 @@ const CommentModal: React.FC<CommentModalProps> = ({ title, suggestionId, onClos
     
     const handleAddComment = () => {
       if (!newComment.trim()) return;
-      if (!user?.isAuthenticated) {
+      if (!user) {
         setError('Vous devez être connecté pour commenter.');
         return;
       }
@@ -37,7 +37,7 @@ const CommentModal: React.FC<CommentModalProps> = ({ title, suggestionId, onClos
 
       const comment = {
         id: newId,
-        userName: user?.name ?? 'Unknown',
+        userName: user?.username ?? 'Unknown',
         votes: { up: 0, down: 0 },
         comments: newComment.trim(),
       };
@@ -69,14 +69,14 @@ const CommentModal: React.FC<CommentModalProps> = ({ title, suggestionId, onClos
                     <div className="flex items-center gap-2">
                         <button
                         onClick={() => voteComment(suggestionId, comment.id, 'up')}
-                        disabled={!user?.isAuthenticated}
+                        disabled={!user}
                         className="text-green-600 hover:text-green-800 text-sm disabled:opacity-50"
                         >
                         👍 {comment.votes.up}
                         </button>
                         <button
                         onClick={() => voteComment(suggestionId, comment.id, 'down')}
-                        disabled={!user?.isAuthenticated}
+                        disabled={!user}
                         className="text-red-600 hover:text-red-800 text-sm disabled:opacity-50"
                         >
                         👎 {comment.votes.down}

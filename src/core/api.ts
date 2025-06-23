@@ -6,7 +6,9 @@ export default class Api {
     this.token = token;
   }
 
-  private static getHeaders(extraHeaders?: Record<string, string>): Record<string, string> {
+  private static getHeaders(
+    extraHeaders?: Record<string, string>
+  ): Record<string, string> {
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
       ...extraHeaders,
