@@ -2,6 +2,7 @@ import React from 'react';
 import { ThumbsUp, ThumbsDown, User, Calendar, MapPin } from 'lucide-react';
 import { Suggestion } from '../../types';
 import { useAppStore } from '../../store/useAppStore';
+import { SuggestionTypeLabelsConstant } from '../../constants/suggestion-type-labels.constant';
 
 interface SuggestionCardProps {
   suggestion: Suggestion;
@@ -9,13 +10,6 @@ interface SuggestionCardProps {
 
 const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion }) => {
   const { user, voteSuggestion } = useAppStore();
-
-  const typeLabels = {
-    transport: 'Transport',
-    amenagement: 'Aménagement',
-    environnement: 'Environnement',
-    social: 'Social',
-  };
 
   const typeColors = {
     transport: 'bg-blue-100 text-blue-800 border-blue-200',
@@ -44,9 +38,12 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion }) => {
   return (
     <div className="card p-6 hover:shadow-lg transition-all duration-200">
       <div className="flex justify-between items-start mb-3">
-        <span className={`inline-block px-3 py-1 text-sm font-medium rounded-full border ${typeColors[suggestion.type]}`}>
-          {typeLabels[suggestion.type]}
-        </span>
+        {suggestion.type.map(
+          (type) =>
+            <span className={`inline-block px-3 py-1 text-sm font-medium rounded-full border ${typeColors[type]}`}>
+              {SuggestionTypeLabelsConstant[type]}
+            </span>
+          )}
         <div className="text-right text-sm text-gray-500">
           <div className="flex items-center space-x-1 mb-1">
             <User className="h-4 w-4" />

@@ -9,7 +9,6 @@ import {
 import { Icon, LatLng } from "leaflet";
 import { Plus } from "lucide-react";
 import { useAppStore } from "../../store/useAppStore";
-import { Suggestion } from "../../types";
 import SuggestionPopup from "./SuggestionPopup";
 import AddSuggestionModal from "./AddSuggestionModal";
 
@@ -84,7 +83,7 @@ const InteractiveMap: React.FC = () => {
             <Marker
               key={suggestion.id}
               position={[suggestion.position.lat, suggestion.position.lng]}
-              icon={createMarkerIcon(suggestion.type)}
+              icon={createMarkerIcon(suggestion.type[0])}
             >
               <Popup className="custom-popup">
                 <SuggestionPopup suggestion={suggestion} />
