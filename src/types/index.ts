@@ -1,3 +1,4 @@
+import { SuggestionStatusEnum } from "./suggestion-status.enum";
 import { SuggestionTypeEnum } from "./suggestion-type.enum";
 
 export interface Suggestion {
@@ -17,6 +18,7 @@ export interface Suggestion {
   createdAt: string;
   userVote?: 'up' | 'down' | null;
   comments?: Comments[];
+  status: SuggestionStatusEnum;
 }
 
 export interface User {
