@@ -1,10 +1,11 @@
 import { create } from "zustand";
-import { AppState, Comments, Idea, Suggestion, User } from "../types";
+import { AppState, BackendComment, Comments, Idea, Suggestion, User } from "../types";
 import AuthService from "../core/services/auth.service";
 import userService from "../core/services/user.service";
 import { SuggestionService } from "../core/services/suggestion.service";
-import { SuggestionTypeEnum } from "../types/suggestion-type.enum";
 import { ideaToSuggestion, suggestionToIdea } from "../core/utils/idea.utils";
+import { CommentService } from "../core/services/comment.service";
+import { transformCommentForFrontend } from "../core/utils/comment.utils";
 
 export const useAppStore = create<AppState>((set, get) => ({
   suggestions: [],
@@ -66,6 +67,18 @@ export const useAppStore = create<AppState>((set, get) => ({
       set({ userSuggestions: userSuggestions });
     } catch (error) {
       console.warn("Error fetching suggestions by author:", error);
+    }
+  },
+
+  async fetchCommentsBySuggestion(idSuggestion: string) {
+    try {
+      const backendComments: BackendComment[] = await CommentService.getCommentsBySuggestion(idSuggestion);
+      const comments: Comments[] = backendComments.map((comment) => {
+        return transformCommentForFrontend(comment);
+      });
+      return comments;
+    } catch(error) {
+      console.warn(`Error fetching comments for ${idSuggestion} :`, error);
     }
   },
 

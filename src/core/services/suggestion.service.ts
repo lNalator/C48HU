@@ -1,4 +1,4 @@
-import { Idea, Suggestion } from "../../types";
+import { Idea } from "../../types";
 import Api from "../api";
 
 export class SuggestionService {

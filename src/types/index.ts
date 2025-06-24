@@ -90,14 +90,33 @@ export interface AppState {
 export interface Comments {
   id: string;
   userName: string;
-  votes: {
-    up: number;
-    down: number;
-  };
+  votes: Votes;
   comments: string;
   userVotes?: {
     [userId: string]: "up" | "down";
   };
+}
+
+export interface Votes {
+  up: number;
+  down: number;
+}
+
+export interface BackendComment {
+  id: number;
+  idea: number;
+  user: { id: number, username: string, name: string };
+  content: string;
+  created_at: string;
+  updated_at: string;
+  votes: BackendCommentVote[];
+}
+
+export interface BackendCommentVote {
+  id: number;
+  comment: number;
+  user: { id: number, username: string, name: string };
+  isPositive: boolean;
 }
 
 export type Tokens = {
