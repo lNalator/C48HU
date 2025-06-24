@@ -1,10 +1,10 @@
 import { create } from "zustand";
-import { AppState, Comments, Suggestion, User } from "../types";
-import { mockSuggestions } from "../data/mockData";
+import { AppState, Comments, Idea, Suggestion, User } from "../types";
 import AuthService from "../core/services/auth.service";
 import userService from "../core/services/user.service";
 import { SuggestionService } from "../core/services/suggestion.service";
-import { Idea } from "../core/models/idea";
+import { SuggestionTypeEnum } from "../types/suggestion-type.enum";
+import { ideaToSuggestion, suggestionToIdea } from "../core/utils/idea.utils";
 
 export const useAppStore = create<AppState>((set, get) => ({
   suggestions: [],
@@ -15,45 +15,36 @@ export const useAppStore = create<AppState>((set, get) => ({
     try {
       const result = await SuggestionService.getAllSuggestion();
       const ideas: Idea[] = result.results;
-      console.log(ideas);
-      const suggestions: Suggestion[] = ideas.map((idea) => ({
-        id: idea.id.toString(),
-        title: idea.title,
-        description: "", //ajouter la description à idea
-        type: [idea.category],
-        position: {
-          lat: Number(idea.latitude),
-          lng: Number(idea.longitude),
-        },
-        votes: {
-          up: idea.positive_votes,
-          down: idea.negative_votes,
-        },
-        author: idea.author_email,
-        createdAt: idea.created_at,
-        userVote: null,
-        comments: [],
-        status: idea.status,
-      }));
-      suggestions.push(...mockSuggestions);
+      const suggestions: Suggestion[] = ideas.map((idea: Idea) => {
+        return ideaToSuggestion(idea);
+      });
+
       set({ suggestions });
     } catch (error) {
       console.error("Failed to fetch suggestions:", error);
     }
   },
 
-  addSuggestion: (newSuggestion) => {
+  addSuggestion: async (newSuggestion) => {
     const suggestion: Suggestion = {
       ...newSuggestion,
-      id: crypto.randomUUID(),
-      votes: { up: 0, down: 0 },
+      id: crypto.randomUUID(), // ID temporaire local
+      votes: { total: 0, up: 0, down: 0 },
       createdAt: new Date().toISOString(),
       userVote: null,
     };
 
+    const idea = suggestionToIdea(suggestion);
+
     set((state) => ({
       suggestions: [...state.suggestions, suggestion],
     }));
+
+    try {
+      await SuggestionService.saveIdea(idea);
+    } catch (error) {
+      console.warn("Saving suggestion error:", error);
+    }
   },
 
   getUserSuggestions: async () => {
@@ -64,25 +55,9 @@ export const useAppStore = create<AppState>((set, get) => ({
       const userSuggestions = await userService
         .getUserSuggestions(user.id)
         .then((response) => {
-          return response.results.map((idea: Idea) => ({
-            id: idea.id.toString(),
-            title: idea.title,
-            description: "", //ajouter la description à idea
-            type: [idea.category],
-            position: {
-              lat: Number(idea.latitude),
-              lng: Number(idea.longitude),
-            },
-            votes: {
-              up: idea.positive_votes,
-              down: idea.negative_votes,
-            },
-            author: idea.author_email,
-            createdAt: idea.created_at,
-            userVote: null,
-            comments: [],
-            status: idea.status,
-          }));
+          return response.results.map((idea: Idea) => {
+            return ideaToSuggestion(idea);
+          });
         });
       if (!userSuggestions) {
         console.warn("No suggestions found for user:", user.id);
@@ -98,36 +73,47 @@ export const useAppStore = create<AppState>((set, get) => ({
     const { user } = get();
     if (!user) return;
 
+    const currentState = get();
+    const currentSuggestion = currentState.suggestions.find((s) => s.id === id);
+    if (!currentSuggestion) return;
+
+    const currentVote = currentSuggestion.userVote;
+    let newVotes = { ...currentSuggestion.votes };
+    let newUserVote: "up" | "down" | null = null;
+
+    if (currentVote === "up") newVotes.up--;
+    if (currentVote === "down") newVotes.down--;
+
+    if (currentVote !== voteType) {
+      if (voteType === "up") {
+        newVotes.up++;
+        newUserVote = "up";
+      } else {
+        newVotes.down++;
+        newUserVote = "down";
+      }
+    }
+
     set((state) => ({
-      suggestions: state.suggestions.map((suggestion) => {
-        if (suggestion.id !== id) return suggestion;
-
-        const currentVote = suggestion.userVote;
-        let newVotes = { ...suggestion.votes };
-        let newUserVote: "up" | "down" | null = null;
-
-        // Remove previous vote if exists
-        if (currentVote === "up") newVotes.up--;
-        if (currentVote === "down") newVotes.down--;
-
-        // Add new vote if different from current
-        if (currentVote !== voteType) {
-          if (voteType === "up") {
-            newVotes.up++;
-            newUserVote = "up";
-          } else {
-            newVotes.down++;
-            newUserVote = "down";
-          }
-        }
-
-        return {
-          ...suggestion,
-          votes: newVotes,
-          userVote: newUserVote,
-        };
-      }),
+      suggestions: state.suggestions.map((suggestion) =>
+        suggestion.id === id
+          ? {
+              ...suggestion,
+              votes: newVotes,
+              userVote: newUserVote,
+            }
+          : suggestion
+      ),
     }));
+
+    try {
+      SuggestionService.voteSuggestion(
+        id,
+        newUserVote !== null && newUserVote === "up"
+      );
+    } catch (error) {
+      console.error("Échec du vote côté serveur, réversion possible si besoin");
+    }
   },
 
   setUser: (user: User) => {

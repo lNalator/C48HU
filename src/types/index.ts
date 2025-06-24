@@ -11,6 +11,7 @@ export interface Suggestion {
     lng: number;
   };
   votes: {
+    total: number;
     up: number;
     down: number;
   };
@@ -19,6 +20,42 @@ export interface Suggestion {
   userVote?: "up" | "down" | null;
   comments?: Comments[];
   status?: SuggestionStatusEnum | string;
+}
+
+export interface Idea {
+  id: number;
+  title: string;
+  description: string;
+  category: SuggestionTypeEnum; // SuggestionTypeEnum
+  status: string;
+  author: {
+    username: string;
+    name: string;
+  };
+  position: {
+    lat: number;
+    lng: number;
+  };
+  zone?: Zone;
+  votesStats: {
+    total: number;
+    up: number;
+    down: number;
+  };
+  comments: [];
+  created_at: string;
+}
+
+export interface Zone {
+  id: number;
+  name: string;
+  zone_type: string;
+  zone_type_display: string;
+  latitude: string;
+  longitude: string;
+  description: string;
+  created_at: string;
+  idea_count: number;
 }
 
 export interface User {

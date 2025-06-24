@@ -1,5 +1,6 @@
-import Api from "./api";
-import { User } from "../types";
+import { User } from "../../types";
+import Api from "../api";
+
 
 export function initializeAuth(): User | null {
   const token = localStorage.getItem("token");

@@ -9,7 +9,6 @@ class AuthService {
 
   async login(email: string, password: string): Promise<User> {
     const data = await Api.post("/auth/login/", { email, password });
-    console.log("Login response:", data);
     this.setTokens(data.tokens);
     localStorage.setItem(this.USER_KEY, JSON.stringify(data.user));
 
@@ -20,7 +19,6 @@ class AuthService {
     try {
       await Api.post("/auth/logout/", {}).then(() => {
         this.clearSession();
-        console.log("Logout successful");
       });
     } catch (err) {
       console.warn("Logout error:", err);

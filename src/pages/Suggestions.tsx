@@ -1,46 +1,52 @@
-import React, { useState, useMemo } from 'react';
-import { useAppStore } from '../store/useAppStore';
-import SuggestionCard from '../components/Suggestions/SuggestionCard';
-import SortFilter from '../components/Suggestions/SortFilter';
+import React, { useState, useMemo } from "react";
+import { useAppStore } from "../store/useAppStore";
+import SuggestionCard from "../components/Suggestions/SuggestionCard";
+import SortFilter from "../components/Suggestions/SortFilter";
 
 const Suggestions: React.FC = () => {
   const { suggestions } = useAppStore();
-  const [sortBy, setSortBy] = useState<'popularity' | 'date' | 'type'>('popularity');
-  const [filterType, setFilterType] = useState<'all' | 'transport' | 'amenagement' | 'environnement' | 'social'>('all');
+  const [sortBy, setSortBy] = useState<"popularity" | "date" | "type">(
+    "popularity"
+  );
+  const [filterType, setFilterType] = useState<
+    "all" | "transport" | "amenagement" | "environnement" | "social"
+  >("all");
 
   const sortedAndFilteredSuggestions = useMemo(() => {
     let filtered = suggestions;
-    
+
     // Filter by type
-    if (filterType !== 'all') {
-      filtered = suggestions.filter(s => (s.type as any) === filterType);
+    if (filterType !== "all") {
+      filtered = suggestions.filter((s) => (s.type as any) === filterType);
     }
-    
+
     // Sort
     const sorted = [...filtered].sort((a, b) => {
       switch (sortBy) {
-        case 'popularity':
+        case "popularity":
           const aScore = a.votes.up - a.votes.down;
           const bScore = b.votes.up - b.votes.down;
           return bScore - aScore;
-        case 'date':
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-        case 'type':
+        case "date":
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+        case "type":
           return String(a.type).localeCompare(String(b.type));
         default:
           return 0;
       }
     });
-    
+
     return sorted;
   }, [suggestions, sortBy, filterType]);
 
   const typeLabels = {
-    all: 'toutes les suggestions',
-    transport: 'suggestions de transport',
-    amenagement: 'suggestions d\'aménagement',
-    environnement: 'suggestions environnementales',
-    social: 'suggestions sociales',
+    all: "toutes les suggestions",
+    transport: "suggestions de transport",
+    amenagement: "suggestions d'aménagement",
+    environnement: "suggestions environnementales",
+    social: "suggestions sociales",
   };
 
   return (
@@ -54,7 +60,7 @@ const Suggestions: React.FC = () => {
         </p>
       </div>
 
-      <SortFilter 
+      <SortFilter
         sortBy={sortBy}
         setSortBy={setSortBy}
         filterType={filterType}
@@ -63,7 +69,8 @@ const Suggestions: React.FC = () => {
 
       <div className="mb-4">
         <p className="text-sm text-gray-600">
-          {sortedAndFilteredSuggestions.length} {typeLabels[filterType]} trouvée{sortedAndFilteredSuggestions.length !== 1 ? 's' : ''}
+          {sortedAndFilteredSuggestions.length} {typeLabels[filterType]} trouvée
+          {sortedAndFilteredSuggestions.length !== 1 ? "s" : ""}
         </p>
       </div>
 
@@ -71,10 +78,9 @@ const Suggestions: React.FC = () => {
         <div className="text-center py-12">
           <p className="text-gray-500 text-lg">Aucune suggestion trouvée.</p>
           <p className="text-gray-400 mt-2">
-            {filterType !== 'all' 
-              ? 'Essayez de changer les filtres ou d\'ajouter une nouvelle suggestion.'
-              : 'Soyez le premier à ajouter une suggestion sur la carte !'
-            }
+            {filterType !== "all"
+              ? "Essayez de changer les filtres ou d'ajouter une nouvelle suggestion."
+              : "Soyez le premier à ajouter une suggestion sur la carte !"}
           </p>
         </div>
       ) : (
