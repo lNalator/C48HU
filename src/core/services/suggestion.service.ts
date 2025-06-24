@@ -1,4 +1,4 @@
-import { Idea } from "../../types";
+import { CreateIdea } from "../../types";
 import Api from "../api";
 
 export class SuggestionService {
@@ -7,11 +7,9 @@ export class SuggestionService {
     return ideas;
   }
 
-  static async saveIdea(suggestion: Idea) {
-    //TODO
+  static async saveIdea(idea: CreateIdea) {
     try {
-      const body = suggestion;
-      const response = await Api.post("/ideas/", body);
+      const response = await Api.post("/ideas/", idea);
       return response.data;
     } catch (error) {
       console.warn("Saving suggestion error:", error);
@@ -21,7 +19,7 @@ export class SuggestionService {
 
   static async voteSuggestion(suggestionId: string, isPositive: boolean) {
     try {
-      const response = await Api.post(`/votes/${suggestionId}/vote/`, {
+      const response = await Api.post(`/ideas/${suggestionId}/vote/`, {
         is_positive: isPositive,
       });
       return response.data;

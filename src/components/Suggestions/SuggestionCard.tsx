@@ -10,14 +10,17 @@ interface SuggestionCardProps {
   className?: string;
 }
 
-const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion, className }) => {
+const SuggestionCard: React.FC<SuggestionCardProps> = ({
+  suggestion,
+  className,
+}) => {
   const { user, voteSuggestion } = useAppStore();
   const [showComments, setShowComments] = useState(false);
 
   const typeColors = {
     transport: "bg-blue-100 text-blue-800 border-blue-200",
-    amenagement: "bg-green-100 text-green-800 border-green-200",
-    environnement: "bg-yellow-100 text-yellow-800 border-yellow-200",
+    amenagement: "bg-yellow-100 text-yellow-800 border-yellow-200",
+    environnement: "bg-green-100 text-green-800 border-green-200",
     social: "bg-purple-100 text-purple-800 border-purple-200",
   };
 

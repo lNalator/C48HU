@@ -26,7 +26,7 @@ export interface Idea {
   id: number;
   title: string;
   description: string;
-  category: SuggestionTypeEnum; // SuggestionTypeEnum
+  category: SuggestionTypeEnum;
   status: string;
   author: {
     username: string;
@@ -44,6 +44,15 @@ export interface Idea {
   };
   comments: [];
   created_at: string;
+}
+
+export interface CreateIdea {
+  title: string;
+  description: string;
+  category: string;
+  latitude: number;
+  longitude: number;
+  zone: number;
 }
 
 export interface Zone {
