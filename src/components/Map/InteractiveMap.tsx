@@ -16,8 +16,8 @@ import AddSuggestionModal from "./AddSuggestionModal";
 const createMarkerIcon = (type: string) => {
   const colors = {
     transport: "#3B82F6",
-    amenagement: "#10B981",
-    environnement: "#F59E0B",
+    amenagement: "#F59E0B",
+    environnement: "#10B981",
     social: "#8B5CF6",
   };
 

@@ -1,18 +1,15 @@
-import { Idea, Suggestion } from "../../types";
+import { CreateIdea, Idea, Suggestion } from "../../types";
 import { SuggestionTypeEnum } from "../../types/suggestion-type.enum";
 
-export const suggestionToIdea = (suggestion: Suggestion): Idea => {
+export const suggestionToIdea = (suggestion: Suggestion): CreateIdea => {
+  console.log(suggestion.position);
   return {
-    id: Number(suggestion.id),
     title: suggestion.title,
     description: suggestion.description,
     category: suggestion.type[0] as SuggestionTypeEnum,
-    position: suggestion.position,
-    votesStats: suggestion.votes,
-    author: { username: suggestion.author, name: suggestion.author },
-    created_at: suggestion.createdAt,
-    comments: [],
-    status: suggestion.status ? suggestion.status : "proposed",
+    latitude: suggestion.position.lat,
+    longitude: suggestion.position.lng,
+    zone: 1,
   };
 };
 
