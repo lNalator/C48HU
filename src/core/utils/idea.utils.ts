@@ -1,5 +1,6 @@
-import { CreateIdea, Idea, Suggestion } from "../../types";
+import { Comments, CreateIdea, Idea, Suggestion } from "../../types";
 import { SuggestionTypeEnum } from "../../types/suggestion-type.enum";
+import { transformCommentForFrontend } from "./comment.utils";
 
 export const suggestionToIdea = (suggestion: Suggestion): CreateIdea => {
   console.log(suggestion.position);
@@ -24,6 +25,10 @@ export const ideaToSuggestion = (idea: Idea): Suggestion => {
     console.warn("Unknown category:", idea.category);
   }
 
+  const comments: Comments[] = idea.comments.map((comment) => {
+    return transformCommentForFrontend(comment);
+  });
+
   return {
     id: idea.id.toString(),
     title: idea.title,
@@ -34,7 +39,7 @@ export const ideaToSuggestion = (idea: Idea): Suggestion => {
     author: idea.author.username,
     createdAt: idea.created_at,
     userVote: null,
-    comments: idea.comments || [],
+    comments: comments,
     status: idea.status,
   };
 };
