@@ -37,15 +37,15 @@ export const useAppStore = create<AppState>((set, get) => ({
 
     const idea = suggestionToIdea(suggestion);
 
-    set((state) => ({
-      suggestions: [...state.suggestions, suggestion],
-    }));
-
     try {
       await SuggestionService.saveIdea(idea);
     } catch (error) {
       console.warn("Saving suggestion error:", error);
     }
+
+    set((state) => ({
+      suggestions: [...state.suggestions, suggestion],
+    }));
   },
 
   getUserSuggestions: async () => {
@@ -162,7 +162,8 @@ export const useAppStore = create<AppState>((set, get) => ({
     return user?.id === userId ? user : null;
   },
 
-  addComment: (suggestionId: string, comment: Comments) => {
+  addComment: async (suggestionId: string, comment: Comments) => {
+    await CommentService.saveComment(suggestionId, comment.comments);
     set((state) => {
       const updatedSuggestions = state.suggestions.map((suggestion) =>
         suggestion.id === suggestionId
