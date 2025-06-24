@@ -125,7 +125,7 @@ export interface BackendCommentVote {
   id: number;
   comment: number;
   user: { id: number, username: string, name: string };
-  isPositive: boolean;
+  is_positive: boolean;
 }
 
 export type Tokens = {

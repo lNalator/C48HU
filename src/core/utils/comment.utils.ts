@@ -5,7 +5,7 @@ export const transformCommentForFrontend = (comment: BackendComment): Comments =
     let userVotes: Record<string, 'up' | 'down'> = {} ;
     comment.votes.forEach((vote) => {
         const voteUserId: string = vote.user.id.toString();
-        if(vote.isPositive) {
+        if(vote.is_positive) {
             votes.up += 1;
             userVotes = {...userVotes, [voteUserId]: 'up'};
         } else {
@@ -30,7 +30,7 @@ export const transformCommentForBackend = (comment: Comments, idSuggestion: stri
                 id: Number(userId),
                 comment: Number(comment.id),
                 user: { id: Number(userId), username: '', name: '' },
-                isPositive: vote === 'up',
+                is_positive: vote === 'up',
             });
         }
     }
