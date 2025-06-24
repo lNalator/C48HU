@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import { useAppStore } from "../store/useAppStore";
 import SuggestionCard from "../components/Suggestions/SuggestionCard";
 import SortFilter from "../components/Suggestions/SortFilter";
+import { SuggestionTypeEnum } from "../types/suggestion-type.enum";
 
 const Suggestions: React.FC = () => {
   const { suggestions } = useAppStore();
@@ -9,7 +10,7 @@ const Suggestions: React.FC = () => {
     "popularity"
   );
   const [filterType, setFilterType] = useState<
-    "all" | "transport" | "amenagement" | "environnement" | "social"
+    "all" | SuggestionTypeEnum
   >("all");
 
   const sortedAndFilteredSuggestions = useMemo(() => {
@@ -17,7 +18,7 @@ const Suggestions: React.FC = () => {
 
     // Filter by type
     if (filterType !== "all") {
-      filtered = suggestions.filter((s) => (s.type as any) === filterType);
+      filtered = suggestions.filter((suggestion) => (suggestion.type as any) == filterType);
     }
 
     // Sort

@@ -1,11 +1,12 @@
 import React from 'react';
 import { Filter, ArrowUpDown } from 'lucide-react';
+import { SuggestionTypeEnum } from '../../types/suggestion-type.enum';
 
 interface SortFilterProps {
   sortBy: 'popularity' | 'date' | 'type';
   setSortBy: (sort: 'popularity' | 'date' | 'type') => void;
-  filterType: 'all' | 'transport' | 'amenagement' | 'environnement' | 'social';
-  setFilterType: (type: 'all' | 'transport' | 'amenagement' | 'environnement' | 'social') => void;
+  filterType: 'all' | SuggestionTypeEnum;
+  setFilterType: (type: 'all' | SuggestionTypeEnum) => void;
 }
 
 const SortFilter: React.FC<SortFilterProps> = ({
