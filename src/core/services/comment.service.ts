@@ -8,7 +8,8 @@ export class CommentService {
 
     static async saveComment(idSuggestion: string, content: string) {
         try{
-            Api.post(`/ideas/${idSuggestion}/comments`, { content: content });
+            const response = Api.post(`/ideas/${idSuggestion}/comments/`, { content: content });
+            return response;
         } catch (error) {
             console.warn(`Error when saving comment for ${idSuggestion} :`, error);
         }
